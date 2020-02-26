@@ -3,3 +3,14 @@ pcb/flowterm-cache.lib
 pcb/flowterm.sch-bak
 pcb/fp-info-cache
 pcb/sym-lib-table
+*.kicad_pcb-bak
+pcb/gerber/flowterm-B_Cu.gbl
+pcb/gerber/flowterm-B_Mask.gbs
+pcb/gerber/flowterm-B_SilkS.gbo
+pcb/gerber/flowterm-Edge_Cuts.gm1
+pcb/gerber/flowterm-F_Cu.gtl
+pcb/gerber/flowterm-F_Mask.gts
+pcb/gerber/flowterm-F_SilkS.gto
+pcb/gerber/flowterm-NPTH.drl
+pcb/gerber/flowterm-PTH.drl
+pcb/gerber.zip

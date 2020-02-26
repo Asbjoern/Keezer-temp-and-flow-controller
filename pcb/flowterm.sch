@@ -86,7 +86,7 @@ U 1 1 5E2B8828
 P 5450 6800
 F 0 "J11" H 5558 7181 50  0000 C CNN
 F 1 "Prog" H 5558 7090 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Horizontal" H 5450 6800 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical" H 5450 6800 50  0001 C CNN
 F 3 "~" H 5450 6800 50  0001 C CNN
 	1    5450 6800
 	1    0    0    -1  
@@ -544,7 +544,7 @@ U 1 1 5E595AFE
 P 8700 5225
 F 0 "J12" H 8780 5217 50  0000 L CNN
 F 1 "Cool pump" H 8780 5126 50  0000 L CNN
-F 2 "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" H 8700 5225 50  0001 C CNN
+F 2 "TerminalBlock_RND:TerminalBlock_RND_205-00012_1x02_P5.00mm_Horizontal" H 8700 5225 50  0001 C CNN
 F 3 "~" H 8700 5225 50  0001 C CNN
 	1    8700 5225
 	1    0    0    -1  
@@ -664,7 +664,7 @@ U 1 1 5E5BD305
 P 750 2350
 F 0 "J1" H 668 2567 50  0000 C CNN
 F 1 "Vin" H 668 2476 50  0000 C CNN
-F 2 "TerminalBlock:TerminalBlock_bornier-2_P5.08mm" H 750 2350 50  0001 C CNN
+F 2 "TerminalBlock_RND:TerminalBlock_RND_205-00012_1x02_P5.00mm_Horizontal" H 750 2350 50  0001 C CNN
 F 3 "~" H 750 2350 50  0001 C CNN
 	1    750  2350
 	-1   0    0    1   
@@ -1247,7 +1247,7 @@ U 1 1 5E7670E0
 P 9525 3975
 F 0 "J13" H 9605 4017 50  0000 L CNN
 F 1 "Fridge" H 9605 3926 50  0000 L CNN
-F 2 "TerminalBlock_TE-Connectivity:TerminalBlock_TE_282834-3_1x03_P2.54mm_Horizontal" H 9525 3975 50  0001 C CNN
+F 2 "TerminalBlock_RND:TerminalBlock_RND_205-00013_1x03_P5.00mm_Horizontal" H 9525 3975 50  0001 C CNN
 F 3 "~" H 9525 3975 50  0001 C CNN
 	1    9525 3975
 	1    0    0    -1  
@@ -1376,4 +1376,48 @@ Wire Wire Line
 	2200 3175 2275 3175
 Wire Wire Line
 	2275 3175 2275 3125
+$Comp
+L Mechanical:MountingHole H1
+U 1 1 5E59D6CB
+P 8125 875
+F 0 "H1" H 8225 921 50  0000 L CNN
+F 1 "MountingHole" H 8225 830 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 8125 875 50  0001 C CNN
+F 3 "~" H 8125 875 50  0001 C CNN
+	1    8125 875 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H2
+U 1 1 5E59D9A6
+P 8350 875
+F 0 "H2" H 8450 921 50  0000 L CNN
+F 1 "MountingHole" H 8450 830 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 8350 875 50  0001 C CNN
+F 3 "~" H 8350 875 50  0001 C CNN
+	1    8350 875 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H3
+U 1 1 5E59DB06
+P 8575 875
+F 0 "H3" H 8675 921 50  0000 L CNN
+F 1 "MountingHole" H 8675 830 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 8575 875 50  0001 C CNN
+F 3 "~" H 8575 875 50  0001 C CNN
+	1    8575 875 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H4
+U 1 1 5E59DBE5
+P 8775 875
+F 0 "H4" H 8875 921 50  0000 L CNN
+F 1 "MountingHole" H 8875 830 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 8775 875 50  0001 C CNN
+F 3 "~" H 8775 875 50  0001 C CNN
+	1    8775 875 
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
