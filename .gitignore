@@ -14,3 +14,6 @@ pcb/gerber/flowterm-F_SilkS.gto
 pcb/gerber/flowterm-NPTH.drl
 pcb/gerber/flowterm-PTH.drl
 pcb/gerber.zip
+pcb/gerber/flowterm-F_Paste.gtp
+pcb/flowterm-rescue.lib
+pcb/flowterm-rescue.dcm

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Keezer settings</title>
+	<script>
+		function g(i) { return document.getElementById(i) };
+		var xhttp, updateTime;
+
+		function transmit(f) {
+			if (!xhttp) { //prevent simultaneous requests
+				xhttp = new XMLHttpRequest();
+				xhttp.open("POST", "/config");
+				xhttp.send(f ? (new FormData(f)) : "");
+				xhttp.onreadystatechange = function () {
+					if (xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
+						var data = JSON.parse(xhttp.responseText);
+						g("setpoint").value = data.setpoint;
+						g("threshold").value = data.threshold;
+						g("kegContentLitre0").value = data.kegContentLitre[0];
+						g("kegContentLitre1").value = data.kegContentLitre[1];
+						g("kegContentLitre2").value = data.kegContentLitre[2];
+						g("kegContentLitre3").value = data.kegContentLitre[3];
+						g("kegContentLitre4").value = data.kegContentLitre[4];
+						g("kegContentLitre5").value = data.kegContentLitre[5];
+						g("cntprlitre0").value = data.cntprlitre[0];
+						g("cntprlitre1").value = data.cntprlitre[1];
+						g("cntprlitre2").value = data.cntprlitre[2];
+						g("cntprlitre3").value = data.cntprlitre[3];
+						g("cntprlitre4").value = data.cntprlitre[4];
+						g("cntprlitre5").value = data.cntprlitre[5];
+						xhttp = null;
+						updateTime = 0;
+					}
+				}
+			}
+			return false; //prevent form redirect
+		}
+		transmit();
+
+	</script>
+	<style>
+		input {
+			padding:5px;
+			font-size:1em;
+			width:95%;
+			filter:invert(100%);
+		}
+
+		body {
+			text-align:center;
+			font-family:verdana;
+			background-color:black;
+			color:white;
+		}
+
+		a {
+			color:#1fa3ec;
+		}
+
+		button {
+			border:0;
+			border-radius:0.3em;
+			background-color:#1fa3ec;
+			color:#fff;
+			line-height:2.4em;
+			font-size:1.2em;
+			width:100%;
+			display:block;
+		}
+
+		.q {
+			float:right;
+		}
+
+		.s {
+			display:inline-block;
+			width:14em;
+			overflow:hidden;
+			text-overflow:ellipsis;
+			white-space:nowrap;
+		}
+		#wl{
+			line-height:1.5em;
+		}
+	</style>
+</head>
+
+<body>
+	<div style='text-align:left;display:inline-block;width:340px;padding:5px'>
+		<form id="cfgform" onsubmit="return transmit(this)">
+            <label for="setpoint">Setpoint &degC:</label>
+			<input id='setpoint' name='setpoint' maxlength=6 />
+			<br />
+            <br />
+		    <label for="threshold">Treshold &degC:</label>
+			<input id='threshold' name='threshold' maxlength=6 />
+			<br />
+			<br />
+            <label for="kegContentLitre0">Keg 1 Litre:</label>
+			<input id='kegContentLitre0' name='kegContentLitre0' maxlength=6 />
+            <br />
+			<br />
+			<label for="kegContentLitre1">Keg 2 Litre:</label>
+			<input id='kegContentLitre1' name='kegContentLitre1' maxlength=6 />
+            <br />
+			<br />
+			<label for="kegContentLitre2">Keg 3 Litre:</label>
+			<input id='kegContentLitre2' name='kegContentLitre2' maxlength=6 />
+            <br />
+			<br />
+			<label for="kegContentLitre3">Keg 4 Litre:</label>
+			<input id='kegContentLitre3' name='kegContentLitre3' maxlength=6 />
+            <br />
+			<br />
+			<label for="kegContentLitre4">Keg 5 Litre:</label>
+			<input id='kegContentLitre4' name='kegContentLitre4' maxlength=6 />
+            <br />
+			<br />
+			<label for="kegContentLitre5">Keg 6 Litre:</label>
+			<input id='kegContentLitre5' name='kegContentLitre5' maxlength=6 />
+            <br />
+            <br />
+            <label for="cntprlitre0">Pulses per Litre 1:</label>
+			<input id='cntprlitre0' name='cntprlitre0' maxlength=6 />
+            <br />
+			<br />
+			<label for="cntprlitre1">Pulses per Litre 2:</label>
+			<input id='cntprlitre1' name='cntprlitre1' maxlength=6 />
+            <br />
+			<br />
+			<label for="cntprlitre2">Pulses per Litre 3:</label>
+			<input id='cntprlitre2' name='cntprlitre2' maxlength=6 />
+            <br />
+			<br />
+			<label for="cntprlitre3">Pulses per Litre 4:</label>
+			<input id='cntprlitre3' name='cntprlitre3' maxlength=6 />
+            <br />
+			<br />
+			<label for="cntprlitre4">Pulses per Litre 5:</label>
+			<input id='cntprlitre4' name='cntprlitre4' maxlength=6 />
+            <br />
+			<br />
+			<label for="cntprlitre5">Pulses per Litre 6:</label>
+			<input id='cntprlitre5' name='cntprlitre5' maxlength=6 />
+            <br />
+			<br />
+            <button type='submit'>Save</button>
+		</form>
+		<br>
+		<a href="javascript:history.back()">Back</a> | 
+		<a href="/">Home</a>
+	</div>
+</body>
+
+</html>

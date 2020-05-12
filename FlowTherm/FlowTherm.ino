@@ -24,8 +24,8 @@ const uint8_t flowPin[6] = {3,4,5,12,13,14};
 
 char mqtt_server[40] = "";
 char mqtt_port[6] = "1883";
-char mqtt_uid[40];
-char mqtt_pwd[40];
+char mqtt_uid[15];
+char mqtt_pwd[15];
 char mqtt_topic[40]="keezer";
 char hostname[40] ="keezer";
 float setpoint = 3.3;
@@ -33,6 +33,10 @@ float temp = 3.3;
 float threshold = 0.5;
 int cntprlitre[6] = {2520,2520,2520,2520,2520,2520}; ////(21*60)*2.
 float kegContentLitre[6] = {0,0,0,0,0,0};
+String name[6] = {"beer1","beer2","beer3","beer4","beer5","beer6"};
+float abv[6] = {0,0,0,0,0,0};
+float ibu[6] = {0,0,0,0,0,0};
+float ebc[6] = {0,0,0,0,0,0};
 bool isAP=true;
 
 #define LOGSIZE 50
@@ -63,7 +67,7 @@ void setup(void){
   pinMode(flowPin[4], INPUT);
   pinMode(flowPin[5], INPUT);
   pinMode(FRIDGE, OUTPUT);
-  digitalWrite(FRIDGE,HIGH);
+  //digitalWrite(FRIDGE,HIGH);
   attachInterrupt(digitalPinToInterrupt(flowPin[0]), flow0, CHANGE);
   attachInterrupt(digitalPinToInterrupt(flowPin[1]), flow1, CHANGE);
   attachInterrupt(digitalPinToInterrupt(flowPin[2]), flow2, CHANGE);
@@ -76,6 +80,7 @@ void setup(void){
   if (SPIFFS.begin()) 
     DEBUG_PRINTLN("Mounted file system");
   loadConfig();
+  loadBeer();
 
   WiFi.hostname(hostname);
   persWM.onConnect(&on_connect);
@@ -124,7 +129,7 @@ void setup(void){
       DEBUG_PRINTLN("setpoint: " + server.arg("setpoint"));
     }
     if (server.hasArg("threshold")) {
-      setpoint = server.arg("threshold").toFloat();
+      threshold = server.arg("threshold").toFloat();
       DEBUG_PRINTLN("threshold: " + server.arg("threshold"));
     }
     if (server.hasArg("cntprlitre0")) {
@@ -175,12 +180,14 @@ void setup(void){
       kegContentLitre[5] = server.arg("kegContentLitre5").toFloat();
       DEBUG_PRINTLN("kegContentLitre5: " + server.arg("kegContentLitre5"));
     }
-
     if(server.args() > 2){
        saveConfig();
+       server.send(200);
+       DEBUG_PRINTLN("save complete.");
+       return;
     }
 
-  StaticJsonDocument<1024> json;
+  StaticJsonDocument<512> json;
   json["mqtt_server"] = mqtt_server;
   json["mqtt_port"] = mqtt_port;
   json["mqtt_uid"] = mqtt_uid;
@@ -199,6 +206,127 @@ void setup(void){
   serializeJson(json, tmp);
     server.send(200, "application/json", tmp);
   });
+  server.on("/beer", []() {
+    DEBUG_PRINTLN("server.on /beer");
+    if (server.hasArg("name0")) {
+      name[0] = server.arg("name0");
+      DEBUG_PRINTLN("name0: " + server.arg("name0"));
+    }
+    if (server.hasArg("name1")) {
+      name[1] = server.arg("name1");
+      DEBUG_PRINTLN("name1: " + server.arg("name1"));
+    }
+    if (server.hasArg("name2")) {
+      name[2] = server.arg("name2");
+      DEBUG_PRINTLN("name2: " + server.arg("name2"));
+    }
+    if (server.hasArg("name3")) {
+      name[3] = server.arg("name3");
+      DEBUG_PRINTLN("name3: " + server.arg("name3"));
+    }
+    if (server.hasArg("name4")) {
+      name[4] = server.arg("name4");
+      DEBUG_PRINTLN("name4: " + server.arg("name4"));
+    }
+    if (server.hasArg("name5")) {
+      name[5] = server.arg("name5");
+      DEBUG_PRINTLN("name5: " + server.arg("name5"));
+    }
+    if (server.hasArg("abv0")) {
+      abv[0] = server.arg("abv0").toFloat();
+      DEBUG_PRINTLN("abv0: " + server.arg("abv0"));
+    }
+    if (server.hasArg("abv1")) {
+      abv[1] = server.arg("abv1").toFloat();
+      DEBUG_PRINTLN("abv1: " + server.arg("abv1"));
+    }
+    if (server.hasArg("abv2")) {
+      abv[2] = server.arg("abv2").toFloat();
+      DEBUG_PRINTLN("abv2: " + server.arg("abv2"));
+    }
+    if (server.hasArg("abv3")) {
+      abv[3] = server.arg("abv3").toFloat();
+      DEBUG_PRINTLN("abv3: " + server.arg("abv3"));
+    }
+    if (server.hasArg("abv4")) {
+      abv[4] = server.arg("abv4").toFloat();
+      DEBUG_PRINTLN("abv4: " + server.arg("abv4"));
+    }
+    if (server.hasArg("abv5")) {
+      abv[5] = server.arg("abv5").toFloat();
+      DEBUG_PRINTLN("abv5: " + server.arg("abv5"));
+    }
+    if (server.hasArg("ibu0")) {
+      ibu[0] = server.arg("ibu0").toFloat();
+      DEBUG_PRINTLN("ibu0: " + server.arg("ibu0"));
+    }
+    if (server.hasArg("ibu1")) {
+      ibu[1] = server.arg("ibu1").toFloat();
+      DEBUG_PRINTLN("ibu1: " + server.arg("ibu1"));
+    }
+    if (server.hasArg("ibu2")) {
+      ibu[2] = server.arg("ibu2").toFloat();
+      DEBUG_PRINTLN("ibu2: " + server.arg("ibu2"));
+    }
+    if (server.hasArg("ibu3")) {
+      ibu[3] = server.arg("ibu3").toFloat();
+      DEBUG_PRINTLN("ibu3: " + server.arg("ibu3"));
+    }
+    if (server.hasArg("ibu4")) {
+      ibu[4] = server.arg("ibu4").toFloat();
+      DEBUG_PRINTLN("ibu4: " + server.arg("ibu4"));
+    }
+    if (server.hasArg("ibu5")) {
+      ibu[5] = server.arg("ibu5").toFloat();
+      DEBUG_PRINTLN("ibu5: " + server.arg("ibu5"));
+    }
+    if (server.hasArg("ebc0")) {
+      ebc[0] = server.arg("ebc0").toFloat();
+      DEBUG_PRINTLN("ebc0: " + server.arg("ebc0"));
+    }
+    if (server.hasArg("ebc1")) {
+      ebc[1] = server.arg("ebc1").toFloat();
+      DEBUG_PRINTLN("ebc1: " + server.arg("ebc1"));
+    }
+    if (server.hasArg("ebc2")) {
+      ebc[2] = server.arg("ebc2").toFloat();
+      DEBUG_PRINTLN("ebc2: " + server.arg("ebc2"));
+    }
+    if (server.hasArg("ebc3")) {
+      ebc[3] = server.arg("ebc3").toFloat();
+      DEBUG_PRINTLN("ebc3: " + server.arg("ebc3"));
+    }
+    if (server.hasArg("ebc4")) {
+      ebc[4] = server.arg("ebc4").toFloat();
+      DEBUG_PRINTLN("ebc4: " + server.arg("ebc4"));
+    }
+    if (server.hasArg("ebc5")) {
+      ebc[5] = server.arg("ebc5").toFloat();
+      DEBUG_PRINTLN("ebc5: " + server.arg("ebc5"));
+    }
+    if(server.args() > 2){
+       saveBeer();
+       server.send(200);
+       DEBUG_PRINTLN("save beer complete.");
+       return;
+    }
+
+  StaticJsonDocument<1024> json;
+  JsonArray arrName = json.createNestedArray("name");
+  JsonArray arrAbv = json.createNestedArray("abv");
+  JsonArray arrIbu = json.createNestedArray("ibu");
+  JsonArray arrEbc = json.createNestedArray("ebc");
+  for(int i = 0; i<6; i++){
+    arrName.add(name[i]);
+    arrAbv.add(abv[i]);
+    arrIbu.add(ibu[i]);
+    arrEbc.add(ebc[i]);
+  }
+  String tmp;
+  serializeJson(json, tmp);
+    server.send(200, "application/json", tmp);
+  });
+  
   server.begin();
   publishTicker.attach(30, publishReadings);
   DEBUG_PRINTLN("Setup complete.");
@@ -225,9 +353,9 @@ void loop(void){
   psclient.loop();
   
   if(temp > setpoint + threshold)
-    digitalWrite(FRIDGE,LOW);
-  else if(temp < setpoint - threshold)
     digitalWrite(FRIDGE,HIGH);
+  else if(temp < setpoint - threshold)
+    digitalWrite(FRIDGE,LOW);
     
 }
 
@@ -294,7 +422,6 @@ void loadConfig(){
           }
         }
         configFile.close();
-        serializeJson(doc, Serial);
       }
   }
   else{
@@ -308,10 +435,46 @@ void loadConfig(){
   DEBUG_PRINTLN("Hostname: " + String(hostname));
 }
 
+void loadBeer(){
+  DEBUG_PRINTLN("Load beer");
+  if (SPIFFS.exists("/beer.json")) {
+      //file exists, reading and loading
+      DEBUG_PRINTLN("reading beer file");
+      File configFile = SPIFFS.open("/beer.json", "r");
+      if (configFile) {
+        DEBUG_PRINTLN("opened beer file");
+        size_t size = configFile.size();
+        StaticJsonDocument<1024> doc;
+        DeserializationError error = deserializeJson(doc,configFile);
+        if (error){
+          DEBUG_PRINTLN("Failed to read file. Using default beer configuration. - "+  String(error.c_str()));
+        }
+        else
+        {
+          JsonArray arrName = doc["name"].as<JsonArray>();
+          JsonArray arrAbv = doc["abv"].as<JsonArray>();
+          JsonArray arrIbu = doc["ibu"].as<JsonArray>();
+          JsonArray arrEbc = doc["ebc"].as<JsonArray>();
+          for(int i=0; i<6; i++)
+          {
+            name[i] = arrName[i].as<String>();
+            abv[i] = arrAbv[i].as<float>();
+            ibu[i] = arrIbu[i].as<float>();
+            ebc[i] = arrEbc[i].as<float>();
+          }
+        }
+        configFile.close();
+      }
+  }
+  else{
+    DEBUG_PRINTLN("Beer file not found. Using default configuration");
+  }
+}
+
 void saveConfig(){
   DEBUG_PRINTLN("saving config");
     
-  StaticJsonDocument<1024> json;
+  StaticJsonDocument<512> json;
   json["mqtt_server"] = mqtt_server;
   json["mqtt_port"] = mqtt_port;
   json["mqtt_uid"] = mqtt_uid;
@@ -322,14 +485,45 @@ void saveConfig(){
   json["threshold"] = threshold;
   JsonArray arrCntprlitre = json.createNestedArray("cntprlitre");
   JsonArray arrKegContentLitre = json.createNestedArray("kegContentLitre");
+  JsonArray arrName = json.createNestedArray("name");
+  JsonArray arrAbv = json.createNestedArray("abv");
+  JsonArray arrIbu = json.createNestedArray("ibu");
+  JsonArray arrEbc = json.createNestedArray("ebc");
   for(int i = 0; i<6; i++){
     arrCntprlitre.add(cntprlitre[i]);
     arrKegContentLitre.add(kegContentLitre[i]);
+    arrName.add(name[i]);
+    arrAbv.add(abv[i]);
+    arrIbu.add(ibu[i]);
+    arrEbc.add(ebc[i]);
   }
 
   File configFile = SPIFFS.open("/config.json", "w");
   if (!configFile) {
     DEBUG_PRINTLN("failed to open config file for writing");
+  }
+  serializeJson(json, configFile);
+  configFile.close();
+}
+
+void saveBeer(){
+  DEBUG_PRINTLN("saving beer");
+    
+  StaticJsonDocument<1024> json;
+  JsonArray arrName = json.createNestedArray("name");
+  JsonArray arrAbv = json.createNestedArray("abv");
+  JsonArray arrIbu = json.createNestedArray("ibu");
+  JsonArray arrEbc = json.createNestedArray("ebc");
+  for(int i = 0; i<6; i++){
+    arrName.add(name[i]);
+    arrAbv.add(abv[i]);
+    arrIbu.add(ibu[i]);
+    arrEbc.add(ebc[i]);
+  }
+
+  File configFile = SPIFFS.open("/beer.json", "w");
+  if (!configFile) {
+    DEBUG_PRINTLN("failed to open beer file for writing");
   }
   serializeJson(json, configFile);
   configFile.close();
@@ -361,6 +555,10 @@ void publishReadings(){
   for(int i = 0; i<6; i++){
     //sendmsg(String(mqtt_topic)+"/data/cntprlitre" + String(i),String(cntprlitre[i]));
     sendmsg(String(mqtt_topic)+"/data/kegContentLitre" + String(i),String(kegContentLitre[i]));
+    sendmsg(String(mqtt_topic)+"/data/name" + String(i),name[i]);
+    sendmsg(String(mqtt_topic)+"/data/abv" + String(i),String(abv[i]));
+    sendmsg(String(mqtt_topic)+"/data/ibu" + String(i),String(ibu[i]));
+    sendmsg(String(mqtt_topic)+"/data/ebc" + String(i),String(ebc[i]));
   }
 }
 
@@ -387,6 +585,54 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
     kegContentLitre[4] = f;
   else if(topicStr == String(mqtt_topic)+"/set/kegContentLitre5")
     kegContentLitre[5] = f;
-
+  else if(topicStr == String(mqtt_topic)+"/set/name0")
+    name[0] = s;
+  else if(topicStr == String(mqtt_topic)+"/set/name1")
+    name[1] = s;
+  else if(topicStr == String(mqtt_topic)+"/set/name2")
+    name[2] = s;
+  else if(topicStr == String(mqtt_topic)+"/set/name3")
+    name[3] = s;
+  else if(topicStr == String(mqtt_topic)+"/set/name4")
+    name[4] = s;
+  else if(topicStr == String(mqtt_topic)+"/set/name5")
+    name[5] = s;
+  else if(topicStr == String(mqtt_topic)+"/set/abv0")
+    abv[0] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/abv1")
+    abv[1] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/abv2")
+    abv[2] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/abv3")
+    abv[3] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/abv4")
+    abv[4] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/abv5")
+    abv[5] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ibu0")
+    ibu[0] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ibu0")
+    ibu[1] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ibu1")
+    ibu[2] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ibu2")
+    ibu[3] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ibu3")
+    ibu[4] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ibu4")
+    ibu[5] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ebc0")
+    ebc[0] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ebc1")
+    ebc[1] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ebc2")
+    ebc[2] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ebc3")
+    ebc[3] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ebc4")
+    ebc[4] = f;
+  else if(topicStr == String(mqtt_topic)+"/set/ebc5")
+    ebc[5] = f;
   saveConfig();
+  saveBeer();
 }

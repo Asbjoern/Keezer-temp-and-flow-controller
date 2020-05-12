@@ -11,25 +11,35 @@
 		function transmit(f) {
 			if (!xhttp) { //prevent simultaneous requests
 				xhttp = new XMLHttpRequest();
-				xhttp.open("POST", "/config");
+				xhttp.open("POST", "/beer");
 				xhttp.send(f ? (new FormData(f)) : "");
 				xhttp.onreadystatechange = function () {
 					if (xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
 						var data = JSON.parse(xhttp.responseText);
-						g("setpoint").value = data.setpoint;
-						g("threshold").value = data.threshold;
-						g("kegContentLitre0").value = data.kegContentLitre[0];
-						g("kegContentLitre1").value = data.kegContentLitre[1];
-						g("kegContentLitre2").value = data.kegContentLitre[2];
-						g("kegContentLitre3").value = data.kegContentLitre[3];
-						g("kegContentLitre4").value = data.kegContentLitre[4];
-						g("kegContentLitre5").value = data.kegContentLitre[5];
-						g("cntprlitre0").value = data.cntprlitre[0];
-						g("cntprlitre1").value = data.cntprlitre[1];
-						g("cntprlitre2").value = data.cntprlitre[2];
-						g("cntprlitre3").value = data.cntprlitre[3];
-						g("cntprlitre4").value = data.cntprlitre[4];
-						g("cntprlitre5").value = data.cntprlitre[5];
+						g("name0").value = data.name[0];
+						g("abv0").value = data.abv[0];
+						g("ibu0").value = data.ibu[0];
+						g("ebc0").value = data.ebc[0];
+						g("name1").value = data.name[1];
+						g("abv1").value = data.abv[1];
+						g("ibu1").value = data.ibu[1];
+						g("ebc1").value = data.ebc[1];
+						g("name2").value = data.name[2];
+						g("abv2").value = data.abv[2];
+						g("ibu2").value = data.ibu[2];
+						g("ebc2").value = data.ebc[2];
+						g("name3").value = data.name[3];
+						g("abv3").value = data.abv[3];
+						g("ibu3").value = data.ibu[3];
+						g("ebc3").value = data.ebc[3];
+						g("name4").value = data.name[4];
+						g("abv4").value = data.abv[4];
+						g("ibu4").value = data.ibu[4];
+						g("ebc4").value = data.ebc[4];
+						g("name5").value = data.name[5];
+						g("abv5").value = data.abv[5];
+						g("ibu5").value = data.ibu[5];
+						g("ebc5").value = data.ebc[5];
 						xhttp = null;
 						updateTime = 0;
 					}
@@ -90,60 +100,100 @@
 <body>
 	<div style='text-align:left;display:inline-block;width:340px;padding:5px'>
 		<form id="cfgform" onsubmit="return transmit(this)">
-            <label for="setpoint">Setpoint °C:</label>
-			<input id='setpoint' name='setpoint' maxlength=6 />
+            <label for="name0">Beer 1 name:</label>
+			<input id='name0' name='name0' maxlength=20 />
 			<br />
             <br />
-		    <label for="threshold">Treshold °C:</label>
-			<input id='threshold' name='threshold' maxlength=6 />
+		    <label for="abv0">ABV:</label>
+			<input id='abv0' name='abv0' maxlength=6 />
 			<br />
 			<br />
-            <label for="kegContentLitre0">Keg 1 Litre:</label>
-			<input id='kegContentLitre0' name='kegContentLitre0' maxlength=6 />
+            <label for="ibu0">IBU:</label>
+			<input id='ibu0' name='ibu0' maxlength=6 />
             <br />
 			<br />
-			<label for="kegContentLitre1">Keg 2 Litre:</label>
-			<input id='kegContentLitre1' name='kegContentLitre1' maxlength=6 />
+			<label for="ebc0">EBC:</label>
+			<input id='ebc0' name='ebc0' maxlength=6 />
             <br />
 			<br />
-			<label for="kegContentLitre2">Keg 3 Litre:</label>
-			<input id='kegContentLitre2' name='kegContentLitre2' maxlength=6 />
+			<label for="name1">Beer 2 name:</label>
+			<input id='name1' name='name1' maxlength=20 />
+			<br />
+            <br />
+		    <label for="abv1">ABV:</label>
+			<input id='abv1' name='abv1' maxlength=6 />
+			<br />
+			<br />
+            <label for="ibu1">IBU:</label>
+			<input id='ibu1' name='ibu1' maxlength=6 />
             <br />
 			<br />
-			<label for="kegContentLitre3">Keg 4 Litre:</label>
-			<input id='kegContentLitre3' name='kegContentLitre3' maxlength=6 />
+			<label for="ebc1">EBC:</label>
+			<input id='ebc1' name='ebc1' maxlength=6 />
             <br />
 			<br />
-			<label for="kegContentLitre4">Keg 5 Litre:</label>
-			<input id='kegContentLitre4' name='kegContentLitre4' maxlength=6 />
+			<label for="name2">Beer 3 name:</label>
+			<input id='name2' name='name2' maxlength=20 />
+			<br />
+            <br />
+		    <label for="abv2">ABV:</label>
+			<input id='abv2' name='abv2' maxlength=6 />
+			<br />
+			<br />
+            <label for="ibu2">IBU:</label>
+			<input id='ibu2' name='ibu2' maxlength=6 />
             <br />
 			<br />
-			<label for="kegContentLitre5">Keg 6 Litre:</label>
-			<input id='kegContentLitre5' name='kegContentLitre5' maxlength=6 />
-            <br />
-            <br />
-            <label for="cntprlitre0">Pulses per Litre 1:</label>
-			<input id='cntprlitre0' name='cntprlitre0' maxlength=6 />
+			<label for="ebc2">EBC:</label>
+			<input id='ebc2' name='ebc2' maxlength=6 />
             <br />
 			<br />
-			<label for="cntprlitre1">Pulses per Litre 2:</label>
-			<input id='cntprlitre1' name='cntprlitre1' maxlength=6 />
+			<label for="name3">Beer 4 name:</label>
+			<input id='name3' name='name3' maxlength=20 />
+			<br />
+            <br />
+		    <label for="abv3">ABV:</label>
+			<input id='abv3' name='abv3' maxlength=6 />
+			<br />
+			<br />
+            <label for="ibu3">IBU:</label>
+			<input id='ibu3' name='ibu3' maxlength=6 />
             <br />
 			<br />
-			<label for="cntprlitre2">Pulses per Litre 3:</label>
-			<input id='cntprlitre2' name='cntprlitre2' maxlength=6 />
+			<label for="ebc3">EBC:</label>
+			<input id='ebc3' name='ebc3' maxlength=6 />
             <br />
 			<br />
-			<label for="cntprlitre3">Pulses per Litre 4:</label>
-			<input id='cntprlitre3' name='cntprlitre3' maxlength=6 />
+			<label for="name4">Beer 5 name:</label>
+			<input id='name4' name='name4' maxlength=20 />
+			<br />
+            <br />
+		    <label for="abv4">ABV:</label>
+			<input id='abv4' name='abv4' maxlength=6 />
+			<br />
+			<br />
+            <label for="ibu4">IBU:</label>
+			<input id='ibu4' name='ibu4' maxlength=6 />
             <br />
 			<br />
-			<label for="cntprlitre4">Pulses per Litre 5:</label>
-			<input id='cntprlitre4' name='cntprlitre4' maxlength=6 />
+			<label for="ebc4">EBC:</label>
+			<input id='ebc4' name='ebc4' maxlength=6 />
             <br />
 			<br />
-			<label for="cntprlitre5">Pulses per Litre 6:</label>
-			<input id='cntprlitre5' name='cntprlitre5' maxlength=6 />
+			<label for="name5">Beer 6 name:</label>
+			<input id='name5' name='name5' maxlength=20 />
+			<br />
+            <br />
+		    <label for="abv5">ABV:</label>
+			<input id='abv5' name='abv5' maxlength=6 />
+			<br />
+			<br />
+            <label for="ibu5">IBU:</label>
+			<input id='ibu5' name='ibu5' maxlength=6 />
+            <br />
+			<br />
+			<label for="ebc5">EBC:</label>
+			<input id='ebc5' name='ebc5' maxlength=6 />
             <br />
 			<br />
             <button type='submit'>Save</button>
