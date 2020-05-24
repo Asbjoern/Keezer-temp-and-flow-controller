@@ -24,8 +24,8 @@ const uint8_t flowPin[6] = {3,4,5,12,13,14};
 
 char mqtt_server[40] = "";
 char mqtt_port[6] = "1883";
-char mqtt_uid[15];
-char mqtt_pwd[15];
+char mqtt_uid[15] = "";
+char mqtt_pwd[15] = "";
 char mqtt_topic[40]="keezer";
 char hostname[40] ="keezer";
 float setpoint = 3.3;
@@ -67,7 +67,7 @@ void setup(void){
   pinMode(flowPin[4], INPUT);
   pinMode(flowPin[5], INPUT);
   pinMode(FRIDGE, OUTPUT);
-  //digitalWrite(FRIDGE,HIGH);
+  digitalWrite(FRIDGE,LOW);
   attachInterrupt(digitalPinToInterrupt(flowPin[0]), flow0, CHANGE);
   attachInterrupt(digitalPinToInterrupt(flowPin[1]), flow1, CHANGE);
   attachInterrupt(digitalPinToInterrupt(flowPin[2]), flow2, CHANGE);
@@ -361,7 +361,8 @@ void loop(void){
 
 void temperatureChanged(uint8_t index, float tempC)
 {
-  temp = tempC;
+  if(tempC > -30 && tempC < 50)
+    temp = tempC;
   //DEBUG_PRINTLN(String(tempC) + " new tempC at index " + index);
 }
 
@@ -398,7 +399,7 @@ void loadConfig(){
       if (configFile) {
         DEBUG_PRINTLN("opened config file");
         size_t size = configFile.size();
-        StaticJsonDocument<1024> doc;
+        DynamicJsonDocument doc(1024);
         DeserializationError error = deserializeJson(doc,configFile);
         if (error){
           DEBUG_PRINTLN("Failed to read file. Using default configuration. - "+  String(error.c_str()));
@@ -444,7 +445,7 @@ void loadBeer(){
       if (configFile) {
         DEBUG_PRINTLN("opened beer file");
         size_t size = configFile.size();
-        StaticJsonDocument<1024> doc;
+        DynamicJsonDocument doc(1024);
         DeserializationError error = deserializeJson(doc,configFile);
         if (error){
           DEBUG_PRINTLN("Failed to read file. Using default beer configuration. - "+  String(error.c_str()));
@@ -474,7 +475,7 @@ void loadBeer(){
 void saveConfig(){
   DEBUG_PRINTLN("saving config");
     
-  StaticJsonDocument<512> json;
+  DynamicJsonDocument json(1024);
   json["mqtt_server"] = mqtt_server;
   json["mqtt_port"] = mqtt_port;
   json["mqtt_uid"] = mqtt_uid;
@@ -485,17 +486,9 @@ void saveConfig(){
   json["threshold"] = threshold;
   JsonArray arrCntprlitre = json.createNestedArray("cntprlitre");
   JsonArray arrKegContentLitre = json.createNestedArray("kegContentLitre");
-  JsonArray arrName = json.createNestedArray("name");
-  JsonArray arrAbv = json.createNestedArray("abv");
-  JsonArray arrIbu = json.createNestedArray("ibu");
-  JsonArray arrEbc = json.createNestedArray("ebc");
   for(int i = 0; i<6; i++){
     arrCntprlitre.add(cntprlitre[i]);
     arrKegContentLitre.add(kegContentLitre[i]);
-    arrName.add(name[i]);
-    arrAbv.add(abv[i]);
-    arrIbu.add(ibu[i]);
-    arrEbc.add(ebc[i]);
   }
 
   File configFile = SPIFFS.open("/config.json", "w");
@@ -509,7 +502,7 @@ void saveConfig(){
 void saveBeer(){
   DEBUG_PRINTLN("saving beer");
     
-  StaticJsonDocument<1024> json;
+  DynamicJsonDocument json(1024);
   JsonArray arrName = json.createNestedArray("name");
   JsonArray arrAbv = json.createNestedArray("abv");
   JsonArray arrIbu = json.createNestedArray("ibu");
@@ -532,7 +525,9 @@ void saveBeer(){
 void mqttReconnect() {
   if (!psclient.connected()) {
     DEBUG_PRINTLN("Attempting MQTT connection...");
-    if (psclient.connect(hostname)) {
+    if (psclient.connect(hostname,
+     (mqtt_uid[0]=='\0')?NULL:mqtt_uid,
+     (mqtt_pwd[0]=='\0')?NULL:mqtt_pwd)) {
       psclient.subscribe((String(mqtt_topic) + "/set/+").c_str());
       DEBUG_PRINTLN("connected " + String(mqtt_topic));
     } else {
